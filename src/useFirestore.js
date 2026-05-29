@@ -92,5 +92,28 @@ export function useFirestore() {
 
   const deleteAdvisor = useCallback(async (id) => { await deleteDoc(doc(db, 'advisors', id)); }, []);
 
-  return { clients, payments, advisors, loading, error, saveClient, deleteClient, savePayment, saveAdvisor, deleteAdvisor };
-}
+const lockClient = useCallback(async (clientId, advisorName) => {
+  await updateDoc(doc(db, 'clients', clientId), {
+    lockedBy: advisorName,
+    lockedAt: serverTimestamp(),
+  });
+}, []);
+
+const unlockClient = useCallback(async (clientId) => {
+  await updateDoc(doc(db, 'clients', clientId), {
+    lockedBy: null,
+    lockedAt: null,
+  });
+}, []);
+
+const isClientLocked = useCallback((client, currentAdvisor) => {
+  if (!client.lockedBy) return false;
+  if (client.lockedBy === currentAdvisor) return false;
+  if (client.lockedAt?.toDate) {
+    const diff = Date.now() - client.lockedAt.toDate().getTime();
+    if (diff > 30 * 60 * 1000) return false;
+  }
+  return true;
+}, []);
+
+return { clients, payments, advisors, loading, error, saveClient, deleteClient, savePayment, saveAdvisor, deleteAdvisor, lockClient, unlockClient, isClientLocked };
