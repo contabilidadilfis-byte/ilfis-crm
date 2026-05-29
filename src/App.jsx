@@ -417,7 +417,7 @@ function ClientForm({ initial, advisors = [], onSave, onClose, onDelete }) {
 
 function KanbanCard({ client, onEdit, onBlock, currentUser }) {
   const days = daysBetween(client.createdAt);
-  const isBlocked = client.advisor !== currentUser;
+  const isBlocked = ;
   const isExpired = days >= 90 && client.stage !== "Ganado" && client.stage !== "Perdido";
   const isPriority = days >= 60 && days < 90 && client.stage !== "Ganado" && client.stage !== "Perdido";
 
@@ -1341,7 +1341,7 @@ export default function CRM() {
   const handleEditClient = (client) => {
     if (client.advisor !== currentUser) { setBlockAlert(client.advisor); return; }
     setEditClient(client);
-    setShowClientForm(true);
+    
   };
 
   const handleDeleteClient = (client) => {
