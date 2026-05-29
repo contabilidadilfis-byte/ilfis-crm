@@ -337,7 +337,7 @@ function TimeBadge({ createdAt, stage }) {
 
 const emptyForm = { company: "", contact: "", phone: "", email: "", country: "", product: "", value: "", advisor: "", stage: "Contacto Inicial" };
 
-function ClientForm({ initial, advisors = [], onSave, onClose }) {
+function ClientForm({ initial, advisors = [], onSave, onClose, onDelete }) {
   const [form, setForm] = useState(initial || { ...emptyForm, advisor: advisors[0] || "" });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -403,6 +403,14 @@ function ClientForm({ initial, advisors = [], onSave, onClose }) {
           Cancelar
         </button>
       </div>
+      {initial && onDelete && (
+        <div className="pt-1 border-t border-slate-100">
+          <button type="button" onClick={onDelete}
+            className="w-full text-xs font-semibold py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors flex items-center justify-center gap-1.5">
+            🗑 Eliminar este cliente permanentemente
+          </button>
+        </div>
+      )}
     </form>
   );
 }
@@ -1309,6 +1317,7 @@ export default function CRM() {
   const [blockAlert, setBlockAlert] = useState(null);
   const [showPayForm, setShowPayForm] = useState(false);
   const [editPayment, setEditPayment] = useState(null);
+  const [deleteConfirmClient, setDeleteConfirmClient] = useState(null);
 
   const activeAdvisorNames = advisors.filter(a => a.active).map(a => a.name);
 
@@ -1333,6 +1342,19 @@ export default function CRM() {
     if (client.advisor !== currentUser) { setBlockAlert(client.advisor); return; }
     setEditClient(client);
     setShowClientForm(true);
+  };
+
+  const handleDeleteClient = (client) => {
+    if (!client) return;
+    setDeleteConfirmClient(client);
+  };
+
+  const confirmDeleteClient = () => {
+    if (!deleteConfirmClient) return;
+    setClients(prev => prev.filter(c => c.id !== deleteConfirmClient.id));
+    setDeleteConfirmClient(null);
+    setShowClientForm(false);
+    setEditClient(null);
   };
 
   const handleSavePayment = (data) => {
@@ -1601,8 +1623,36 @@ export default function CRM() {
       {/* Modals */}
       {showClientForm && (
         <Modal title={editClient ? `Editar: ${editClient.company}` : "Registrar Nuevo Cliente"} onClose={() => { setShowClientForm(false); setEditClient(null); }}>
-          <ClientForm initial={editClient} advisors={activeAdvisorNames} onSave={handleSaveClient} onClose={() => { setShowClientForm(false); setEditClient(null); }} />
+          <ClientForm
+            initial={editClient}
+            advisors={activeAdvisorNames}
+            onSave={handleSaveClient}
+            onClose={() => { setShowClientForm(false); setEditClient(null); }}
+            onDelete={editClient ? () => handleDeleteClient(editClient) : null}
+          />
         </Modal>
+      )}
+      {deleteConfirmClient && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(15,23,42,0.85)" }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <div className="text-center mb-5">
+              <div className="text-5xl mb-3">🗑️</div>
+              <h3 className="font-black text-slate-900 text-xl mb-2">¿Eliminar cliente?</h3>
+              <p className="text-slate-600">
+                Estás por eliminar permanentemente a <strong>{deleteConfirmClient.company}</strong>.
+                Esta acción no se puede deshacer.
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={confirmDeleteClient} className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition-colors">
+                Sí, eliminar
+              </button>
+              <button onClick={() => setDeleteConfirmClient(null)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl transition-colors">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
       {showPayForm && (
         <Modal title={editPayment ? "Editar Pago" : "Registrar Nuevo Pago"} onClose={() => { setShowPayForm(false); setEditPayment(null); }}>
@@ -1613,3 +1663,4 @@ export default function CRM() {
     </div>
   );
 }
+
