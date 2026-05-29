@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from "react";
-import React from "react";
+import React from "react"; import { useFirestore } from "./useFirestore";
 
 // ══════════════════════════════════════════════════════════════════
 //  Motor de exportación Excel — genera .xlsx nativo sin librerías
@@ -1306,9 +1306,9 @@ function AdvisorsTab({ advisors, setAdvisors, clients, currentUser, setCurrentUs
 export default function CRM() {
   const [tab, setTab] = useState("dashboard");
   const [view, setView] = useState("kanban");
-  const [clients, setClients] = useState(INITIAL_CLIENTS);
-  const [payments, setPayments] = useState(INITIAL_PAYMENTS);
-  const [advisors, setAdvisors] = useState(INITIAL_ADVISORS);
+  const { clients, payments, advisors, loading, saveClient, deleteClient, savePayment, saveAdvisor, deleteAdvisor, lockClient, unlockClient, isClientLocked } = useFirestore();
+  
+  
   const [currentUser, setCurrentUser] = useState("Laura Gómez");
   const [search, setSearch] = useState("");
   const [filterStage, setFilterStage] = useState("Todas");
@@ -1627,7 +1627,7 @@ export default function CRM() {
             initial={editClient}
             advisors={activeAdvisorNames}
             onSave={handleSaveClient}
-            onClose={() => { setShowClientForm(false); setEditClient(null); }}
+            onClose={() => async () => { if (editClient?.id) await unlockClient(editClient.id); setShowClientForm(false); setEditClient(null); }
             onDelete={editClient ? () => handleDeleteClient(editClient) : null}
           />
         </Modal>
