@@ -266,7 +266,7 @@ function Modal({ children, onClose, title }) {
   );
 }
 
-function BlockAlert({ advisor, onClose }) {
+function BlockAlert({ advisor, onClose, onReassign, isDirector }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(15,23,42,0.7)" }}>
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
@@ -293,7 +293,7 @@ function BlockAlert({ advisor, onClose }) {
         </div>
         <div className="px-6 pb-5">
           <button onClick={onClose} className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl transition-colors">
-            Entendido
+            Entendido           </button>           {isDirector && onReassign && (             <button onClick={onReassign} className="w-full mt-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 rounded-xl transition-colors">               Reasignar a mi nombre             </button>           )}
           </button>
         </div>
       </div>
@@ -1309,7 +1309,7 @@ export default function CRM() {
   const { clients, payments, advisors, loading, saveClient, deleteClient, savePayment, saveAdvisor, deleteAdvisor, lockClient, unlockClient, isClientLocked } = useFirestore();
   
   
-  const [currentUser, setCurrentUser] = useState("Laura Gómez");
+  const [currentUser, setCurrentUser] = useState("Eliana Chavez");
   const [search, setSearch] = useState("");
   const [filterStage, setFilterStage] = useState("Todas");
   const [showClientForm, setShowClientForm] = useState(false);
@@ -1659,7 +1659,7 @@ export default function CRM() {
           <PaymentForm clients={clients} initial={editPayment} onSave={handleSavePayment} onClose={() => { setShowPayForm(false); setEditPayment(null); }} />
         </Modal>
       )}
-      {blockAlert && <BlockAlert advisor={blockAlert} onClose={() => setBlockAlert(null)} />}
+      {blockAlert && <BlockAlert advisor={blockAlert} onClose={() => setBlockAlert(null)} isDirector={advisors.find(a => a.name === currentUser)?.role === "Director"} onReassign={async () => { await saveClient({...clients.find(c => c.advisor === blockAlert), advisor: currentUser}); setBlockAlert(null); }} />}
     </div>
   );
 }
