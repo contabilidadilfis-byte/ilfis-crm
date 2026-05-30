@@ -1333,18 +1333,18 @@ export default function CRM() {
     return list;
   }, [clients, search, filterStage]);
 
-  const handleSaveClient = (data) => {
+  const handleSaveClient = async (data) => {
     if (editClient) {
-      setClients(prev => prev.map(c => c.id === editClient.id ? { ...c, ...data } : c));
+      await saveClient(data, editClient.id);
     } else {
-      setClients(prev => [...prev, { ...data, id: Date.now(), createdAt: new Date().toISOString().split("T")[0] }]);
+      await saveClient(data, null);
     }
     setShowClientForm(false);
     setEditClient(null);
   };
 
-  const handleEditClient = (client) => {
-    if (client.advisor !== currentUser) { setBlockAlert(client.advisor); return; }
+  const handleEditClient = async (client) => {
+    if (isClientLocked(client, currentUser)) { setBlockAlert(client.advisor); return; }     await lockClient(client.id, currentUser);
     setEditClient(client);
     
   };
@@ -1356,17 +1356,17 @@ export default function CRM() {
 
   const confirmDeleteClient = () => {
     if (!deleteConfirmClient) return;
-    setClients(prev => prev.filter(c => c.id !== deleteConfirmClient.id));
+    await deleteClient(deleteConfirmClient.id);
     setDeleteConfirmClient(null);
     setShowClientForm(false);
     setEditClient(null);
   };
 
-  const handleSavePayment = (data) => {
+  const handleSavePayment = async (data) => {
     if (editPayment) {
-      setPayments(prev => prev.map(p => p.id === editPayment.id ? { ...p, ...data } : p));
+      await savePayment(data, editPayment.id);
     } else {
-      setPayments(prev => [...prev, { ...data, id: Date.now() }]);
+      await savePayment(data, null);
     }
     setShowPayForm(false);
     setEditPayment(null);
