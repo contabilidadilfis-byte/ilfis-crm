@@ -98,7 +98,7 @@ const lockClient = useCallback(async (clientId, advisorName) => {
     lockedAt: serverTimestamp(),
   });
 }, []);
-
+  
 const unlockClient = useCallback(async (clientId) => {
   await updateDoc(doc(db, 'clients', clientId), {
     lockedBy: null,
