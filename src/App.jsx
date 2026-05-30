@@ -293,8 +293,13 @@ function BlockAlert({ advisor, onClose, onReassign, isDirector }) {
         </div>
         <div className="px-6 pb-5">
           <button onClick={onClose} className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl transition-colors">
-            Entendido           </button>           {isDirector && onReassign && (             <button onClick={onReassign} className="w-full mt-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 rounded-xl transition-colors">               Reasignar a mi nombre             </button>           )}
+            Entendido            
           </button>
+          {isDirector && onReassign && (
+            <button onClick={onReassign} className="w-full mt-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 rounded-xl transition-colors">
+              Reasignar a mi nombre
+            </button>
+          )}
         </div>
       </div>
     </div>
