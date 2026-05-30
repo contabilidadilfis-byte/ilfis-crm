@@ -1632,7 +1632,7 @@ export default function CRM() {
             initial={editClient}
             advisors={activeAdvisorNames}
             onSave={handleSaveClient}
-            onClose={() => async () => { if (editClient?.id) await unlockClient(editClient.id); setShowClientForm(false); setEditClient(null); }
+            onClose={async () => { if (editClient?.id) await unlockClient(editClient.id); setShowClientForm(false); setEditClient(null); }}
             onDelete={editClient ? () => handleDeleteClient(editClient) : null}
           />
         </Modal>
