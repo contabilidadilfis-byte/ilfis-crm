@@ -1354,7 +1354,7 @@ export default function CRM() {
     setDeleteConfirmClient(client);
   };
 
-  const confirmDeleteClient = () => {
+  const confirmDeleteClient = async () => {
     if (!deleteConfirmClient) return;
     await deleteClient(deleteConfirmClient.id);
     setDeleteConfirmClient(null);
