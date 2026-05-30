@@ -422,7 +422,7 @@ function ClientForm({ initial, advisors = [], onSave, onClose, onDelete }) {
 
 function KanbanCard({ client, onEdit, onBlock, currentUser }) {
   const days = daysBetween(client.createdAt);
-  const isBlocked = ;
+  const isBlocked = client.advisor !== currentUser;
   const isExpired = days >= 90 && client.stage !== "Ganado" && client.stage !== "Perdido";
   const isPriority = days >= 60 && days < 90 && client.stage !== "Ganado" && client.stage !== "Perdido";
 
