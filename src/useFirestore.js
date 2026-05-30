@@ -31,12 +31,12 @@ export function useFirestore() {
     if (seeded) return;
     setSeeded(true);
     try {
-      if (advisorDocs.length === 0) {
+      if (false && advisorDocs.length === 0) {
         for (const a of SEED_ADVISORS) {
           await addDoc(collection(db, 'advisors'), { ...a, createdAt: serverTimestamp() });
         }
       }
-      if (clientDocs.length === 0) {
+      if (false && clientDocs.length === 0) {
         for (let i = 0; i < SEED_CLIENTS.length; i++) {
           await addDoc(collection(db, 'clients'), { ...SEED_CLIENTS[i], _seededIdx: i + 1 });
         }
