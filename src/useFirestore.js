@@ -116,4 +116,4 @@ const isClientLocked = useCallback((client, currentAdvisor) => {
   return true;
 }, []);
 
-return { clients, payments, advisors, loading, error, saveClient, deleteClient, savePayment, saveAdvisor, deleteAdvisor, lockClient, unlockClient, isClientLocked };
+return { clients, payments, advisors, loading, error, saveClient, deleteClient, savePayment, saveAdvisor, deleteAdvisor, lockClient, unlockClient, isClientLocked }; }
