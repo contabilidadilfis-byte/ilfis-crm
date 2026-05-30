@@ -1659,7 +1659,7 @@ export default function CRM() {
           <PaymentForm clients={clients} initial={editPayment} onSave={handleSavePayment} onClose={() => { setShowPayForm(false); setEditPayment(null); }} />
         </Modal>
       )}
-      {blockAlert && <BlockAlert advisor={blockAlert} onClose={() => setBlockAlert(null)} isDirector={advisors.find(a => a.name === currentUser)?.role === "Director"} onReassign={async () => { await saveClient({...clients.find(c => c.advisor === blockAlert), advisor: currentUser}); setBlockAlert(null); }} />}
+      {blockAlert && <BlockAlert advisor={blockAlert} onClose={() => setBlockAlert(null)} isDirector={currentUser === "Eliana Chavez"} onReassign={async () => { await saveClient({...clients.find(c => c.advisor === blockAlert), advisor: currentUser}); setBlockAlert(null); }} />}
     </div>
   );
 }
